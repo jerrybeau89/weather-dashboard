@@ -25,15 +25,6 @@ $('#search-btn').click(function(event){
   findCityForecast();
 });
 
-//This uses the local storage that is made into a card and displayed and makes it clickable, and also calls both api functions to run
-contentHistory.on('click', '.history-btn-card', function(){
-  document.getElementById('search-input').value = $(this).text();
-  todaysResults.text('');
-  contentResults.text('');
-  findCityToday();
-  findCityForecast();
-});
-
 //This takes the users input, ensures all letters are made lower case, finds the first character of the string, converts it to uppercase and adds the sliced version of the string to the end creating a capitalized word.
 function capitalCity() {
   let cityLower = $('#search-input').val().toLowerCase();
@@ -162,9 +153,9 @@ function findCityForecast () {
             forecastContainer.addClass('bg-dark');
             forecastContainer.addClass('text-white');
             forecastDateContainer.text(date);
-            $(forecastIconContainer).attr('src', 'http://openweathermap.org/img/wn/' + icon + '@2x.png');
-            $(forecastIconContainer).attr('height', '40px');
-            $(forecastIconContainer).attr('width', '40px');
+            forecastIconContainer.attr('src', 'http://openweathermap.org/img/wn/' + icon + '@2x.png');
+            forecastIconContainer.attr('height', '40px');
+            forecastIconContainer.attr('width', '40px');
             forecastTempContainer.text('Temp: ' + temp + '°F');
             forecastWindContainer.text('Wind: ' + wind + 'MPH');
             forecastHumidityContainer.text('Humidity: ' + humidity + '%');
@@ -172,7 +163,7 @@ function findCityForecast () {
             contentResults.append(forecastContainer);
           
           }
-
+          console.log(data);
         });
       });
   };
@@ -183,11 +174,20 @@ function makeSearchHistory() {
   let storageHistory = JSON.parse(localStorage.getItem('search-history'));
   for (let i = 0; i < storageHistory.length; i++) {
       let historyContainer = $('<p>');
-      historyContainer.text(storageHistory[i]);
       historyContainer.addClass('history-btn-card')
       historyContainer.addClass('card');
+      historyContainer.text(storageHistory[i]);
       contentHistory.prepend(historyContainer);
   }
-}
+} 
+
+//This uses the local storage that is made into a card and displayed and makes it clickable, and also calls both api functions to run
+contentHistory.on('click', '.history-btn-card', function(){
+  document.getElementById('search-input').value = $(this).text();
+  todaysResults.text('');
+  contentResults.text('');
+  findCityToday();
+  findCityForecast();
+});
 
 makeSearchHistory();
